@@ -79,7 +79,7 @@ struct StateBoard {
 };
 
 void PrintBoard(int N, vector<Square>& solution) {
-    cout << "\n\n";
+    cout << "\n";
     vector<vector<int>> board(N, vector<int>(N, 0));
 
     int number = 1;
@@ -97,10 +97,12 @@ void PrintBoard(int N, vector<Square>& solution) {
 
     for (int i = 0; i < N; ++i) {
         for (int j = 0; j < N; ++j) {
-            cout << board[i][j] << " ";
+            cout << board[j][i] << " ";
         }
         cout << endl;
     }
+    cout << "\n\n";
+
 }
 
 void FormedSolution(vector<Square> solution, int N) {
@@ -166,6 +168,13 @@ int main() {
     cin >> N;
 
     if (N % 2 == 0) {
+        #ifdef LOG
+        cout << "Длина стороны квадрата четная, поэтому ставим 4 квадрата:" << endl;
+        cout << "Ставаим квадрат размера N = " << N / 2 << " на координаты x = " << 0 + 1 << " y = " << 0 + 1 << endl;
+        cout << "Ставаим квадрат размера N = " << N / 2 << " на координаты x = " << 0 + 1 << " y = " << N / 2 + 1 << endl;
+        cout << "Ставаим квадрат размера N = " << N / 2 << " на координаты x = " << N / 2 + 1 << " y = " << 0 + 1 << endl;
+        cout << "Ставаим квадрат размера N = " << N / 2 << " на координаты x = " << N / 2 + 1 << " y = " << N / 2 + 1 << endl;
+        #endif
         FormedSolution(EvenSolution(N), N);
         operations_count++;
         write_results_to_file(N, operations_count);
@@ -182,6 +191,22 @@ int main() {
     while(!st.empty()) {
         StateBoard current = st.top();
         st.pop();
+        operations_count++;
+
+
+
+        #ifdef LOG
+        cout << "\nИзвлекаем состояние доски из стека" << endl;
+        cout << "Текущее количество квадратов: " << current.placed_sq.size() << endl;
+        if (!current.placed_sq.empty()) {
+            cout << "Последний поставленный квадрат: размер = "\
+                << current.placed_sq.back().size 
+                << " на координаты x = " << current.placed_sq.back().x + 1 << ", y = " 
+                << current.placed_sq.back().y + 1 << endl;
+        }
+        cout << "Доска в этом состоянии:" << endl;
+        PrintBoard(N, current.placed_sq);
+        #endif
         
         int x, y;
         if (FullBoard(current.board, x, y)) {
@@ -189,15 +214,24 @@ int main() {
                 best_solution = current.placed_sq;
             }
             operations_count++;
+            #ifdef LOG
+            cout << "Доска заполнилась! Квадратов: " << current.placed_sq.size() << endl;
+            #endif
             continue;
         }
         
         if (current.placed_sq.size() >= best_solution.size()) {
             operations_count++;
+            #ifdef LOG
+            cout << "Количество квадратов на доске больше или равно количеству квадратов в лучшем решении!\n" << endl;
+            #endif
             continue;
         }
         int m = min(N - x, N - y);
         if (current.placed_sq.size() + CountEmptyCell(current.board) / (m * m) >= best_solution.size()) {
+            #ifdef LOG
+            cout << "При наилучшем исходе размещения квадратов, количество квадратов будет больше или равно количеству квадратов в лучшем решении!\n" << endl;
+            #endif
             operations_count++;
             continue;
         }
@@ -220,6 +254,7 @@ int main() {
                 operations_count++;
 
                 #ifdef LOG
+                cout << "Ставаим квадрат размера N = " <<  size << " на координаты x = " << x + 1 << " y = " << y + 1 << endl;
                 PrintBoard(N, new_state1.placed_sq);
                 cout << "Операций = " << operations_count << endl;
                 #endif
@@ -238,6 +273,10 @@ int main() {
                     operations_count += 3;
 
                     #ifdef LOG
+                    cout << "Ставаим три квадрата размера N = " <<  size << " , " << second_size << " , " << second_size <<\
+                     " на координаты x = " << x + 1 << " y = " << y + 1 << "\n" <<\
+                      "x = " << size + 1 << " y = " << 0 + 1 << "\n" <<\
+                      "x = " << 0 + 1 << " y = " << size + 1 << endl;
                     PrintBoard(N, new_state2.placed_sq);
                     cout << "Операций = " << operations_count << endl;
                     #endif
