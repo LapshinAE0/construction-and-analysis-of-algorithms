@@ -54,7 +54,8 @@ int CMP(string& s, string& t, vector<size_t>& pi) {
 int main() {
     string t;
     string p;
-    cin >> p >> t;
+    getline(cin, p);
+    getline(cin, t);
 
     if (t.length() != p.length()) {
         cout << -1 << endl;

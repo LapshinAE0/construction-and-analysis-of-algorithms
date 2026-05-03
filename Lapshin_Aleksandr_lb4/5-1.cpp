@@ -71,7 +71,17 @@ void print_answer(vector<size_t> result) {
 int main() {
     string t;
     string p;
-    cin >> p >> t;
+    getline(cin, p);
+    getline(cin, t);
+
+    if ((t.empty() || p.empty()) && !(t.empty() && p.empty())) {
+        cout << -1 << endl;
+        return 0;
+    } else if(t.empty() && p.empty()) {
+        cout << 0 << endl;
+        return 0;
+    }
+    
     vector<size_t> pref = prefix_function(p);
 
     vector<size_t> result = CMP(t, p, pref);
