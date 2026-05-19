@@ -28,7 +28,7 @@ char idx_to_char(int i) {
     return '?';
 }
 
-struct Vertex {
+struct node {
     int next[5];
     int suffix_link;
     int final_link;
@@ -36,7 +36,7 @@ struct Vertex {
     int pchar;
     vector<int> pattern_ids;
     
-    Vertex() {
+    node() {
         for (int i = 0; i < 5; i++) {
             next[i] = -1;
         }
@@ -47,7 +47,7 @@ struct Vertex {
     }
 };
 
-vector<Vertex> bor;
+vector<node> bor;
 vector<string> fragments;
 vector<int> fragment_pos;
 
@@ -80,8 +80,7 @@ void print_tree(int v = 0, string indent = "") {
         if (last) cout << "└── ";
         else cout << "├── ";
         
-        cout << u << " (suff=" << bor[u].suffix_link 
-             << ", final=" << bor[u].final_link;
+        cout << u << " (suff=" << bor[u].suffix_link << ", final=" << bor[u].final_link;
         
         if (!bor[u].pattern_ids.empty()) {
             cout << ", terms=[";
